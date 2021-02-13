@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+
+        <title>Administrador !</title>
+    </h:head>
+    <h:body>
+
+        <div class="container">
+
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="#">ADSI</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Administrador <span class="sr-only">(current)</span></a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#">#{usuarioSesion.usuLog.nombre}  #{usuarioSesion.usuLog.apellido}</a>
+                        </li>
+
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Acciones
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Mis datos</a>
+                                <a class="dropdown-item" href="#">Mis compras</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="../index.xhtml">Cerrar Session</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search"/>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                    </form>
+                </div>
+            </nav>
+
+
+            <div class="row">
+                <c:forEach items="#{usuarioSesion.usuLog.rolCollection}" var="rol">
+                    <a href="../#{rol.nombre}/index.xhtml">
+                        <figure class="figure">
+                            <img src="../imagen/#{rol.nombre}.png" style="height: 60px; width: 60px; margin-top: 10px; margin-right: 10px" class="figure-img img-fluid rounded" alt="#{rol.nombre}."/>
+                            <figcaption class="figure-caption">#{rol.nombre}.</figcaption>
+                        </figure>
+                    </a>
+                </c:forEach>
+            </div>
+
+            <div class="row">
+
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Tipo de documento</th>
+                            <th scope="col">Documento</th>
+                            <th scope="col">Nombres / Apellidos</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Acciones</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <h:form>
+                            <c:forEach items="#{usuarioSesion.listaUsuarios()}" var="usuario">
+                                <tr>
+                                    <th scope="row">#{usuario.tipoDocumento}</th>
+                                    <td>#{usuario.documento}</td>
+                                    <td>#{usuario.nombre} #{usuario.apellido}</td>
+                                    <td>#{usuario.correo}</td>
+                                    <td>
+                                        <c:if test="#{usuario.estado == 1}">
+                                            <h:commandButton action="#{usuarioSesion.desactivaUsuario(usuario.idUsuario)}" class="btn btn-outline-secondary" value="Desactivar"/>
+                                        </c:if>
+                                        
+                                         <c:if test="#{usuario.estado == 0}">
+                                            <h:commandButton action="#{usuarioSesion.activaUsuario(usuario.idUsuario)}" class="btn btn-outline-primary" value="Activar"/>
+                                        </c:if>
+                                        
+                                        <h:commandButton action="#{usuarioSesion.eliminarUsuario(usuario.idUsuario)}" class="btn btn-outline-danger" value="X"/>
+                                    </td>
+
+                                </tr>
+                            </c:forEach>
+                        </h:form>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    </h:body>
+</html>
