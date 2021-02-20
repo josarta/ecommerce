@@ -72,6 +72,29 @@ public class UsuarioFacade extends AbstractFacade<Usuario> implements UsuarioFac
     
     
     
+    @Override
+    public Usuario buscarPorId(int usuarioId){
+        try {
+            em.getEntityManagerFactory().getCache().evictAll();
+            Query u = em.createQuery("SELECT u FROM Usuario u WHERE u.idUsuario = :usuarioId");
+            u.setParameter("usuarioId", usuarioId);
+            return (Usuario) u.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+     @Override
+    public Usuario buscarPorCorreo(String correo){
+        try {
+            em.getEntityManagerFactory().getCache().evictAll();
+            Query u = em.createQuery("SELECT u FROM Usuario u WHERE u.correo = :correo");
+            u.setParameter("correo", correo);
+            return (Usuario) u.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
     
     
 }

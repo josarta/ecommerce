@@ -2,7 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -39,7 +41,8 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#">Mis datos</a>
-                                <a class="dropdown-item" href="#">Mis compras</a>
+                                <a class="dropdown-item" href="gestionproductos.xhtml">Gestion Productos</a>
+                                 <a class="dropdown-item" href="gestioncategorias.xhtml">Gestion Categorias</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="../index.xhtml">Cerrar Session</a>
                             </div>
@@ -89,19 +92,89 @@
                                         <c:if test="#{usuario.estado == 1}">
                                             <h:commandButton action="#{usuarioSesion.desactivaUsuario(usuario.idUsuario)}" class="btn btn-outline-secondary" value="Desactivar"/>
                                         </c:if>
-                                        
-                                         <c:if test="#{usuario.estado == 0}">
+                                        <c:if test="#{usuario.estado == 0}">
                                             <h:commandButton action="#{usuarioSesion.activaUsuario(usuario.idUsuario)}" class="btn btn-outline-primary" value="Activar"/>
                                         </c:if>
-                                        
+                                        <h:commandButton action="#{usuarioSesion.tomarDatos(usuario)}" html5:data-toggle="modal" html5:data-target="#exampleModal" class="btn btn-primary" value="perfiles">
+                                            <f:ajax render="modalRoles"></f:ajax>
+                                        </h:commandButton>
                                         <h:commandButton action="#{usuarioSesion.eliminarUsuario(usuario.idUsuario)}" class="btn btn-outline-danger" value="X"/>
                                     </td>
-
                                 </tr>
                             </c:forEach>
                         </h:form>
                     </tbody>
                 </table>
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document" style="max-width: 675px;">
+                        <div class="modal-content">
+
+                            <h:panelGroup id="modalRoles">
+                                <h:form id="formularioRoles">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Perfiles - #{usuarioSesion.usuGestion.nombre} #{usuarioSesion.usuGestion.apellido}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="jumbotron jumbotron-fluid">
+                                            <h:panelGroup id="container">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="card" style="width: 18rem;">
+                                                                <div class="card-header">
+                                                                    Activos
+                                                                </div>
+                                                                <ul class="list-group list-group-flush">
+                                                                    <c:forEach items="#{usuarioSesion.usuGestion.rolCollection}" var="rol">
+                                                                        <h:commandLink action="#{usuarioSesion.removerRol(rol)}">
+                                                                            <li class="list-group-item">#{rol.nombre}</li>    
+                                                                            <f:ajax render="formularioRoles:container"></f:ajax>
+                                                                        </h:commandLink>
+                                                                    </c:forEach>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="card" style="width: 18rem;">
+                                                                <div class="card-header">
+                                                                    Sin Activar
+                                                                </div>
+                                                                <ul class="list-group list-group-flush">
+                                                                    <c:forEach items="#{usuarioSesion.noRoles}" var="rol">
+                                                                        <h:commandLink action="#{usuarioSesion.adicionaRol(rol)}">
+                                                                            <li class="list-group-item">#{rol.nombre}</li> 
+                                                                            <f:ajax render="formularioRoles:container"></f:ajax>
+                                                                        </h:commandLink>
+                                                                    </c:forEach>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                        </div>
+                                    </div>                            
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </h:form>
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
             </div>
         </div>
 

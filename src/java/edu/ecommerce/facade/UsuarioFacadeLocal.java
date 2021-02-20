@@ -35,5 +35,9 @@ public interface UsuarioFacadeLocal {
     public boolean cambioEstado(int id_usuario, int estado);
 
     public List<Usuario> listarTodos();
+
+    public Usuario buscarPorId(int usuarioId);
+
+    public Usuario buscarPorCorreo(String correo);
     
 }

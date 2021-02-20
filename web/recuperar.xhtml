@@ -51,39 +51,33 @@
             
             <c:if test="#{usuarioSesion.regEx.equalsIgnoreCase('2')}">
                 <div class="alert alert-danger" role="alert">
-                    Por favor revise sus datos !!!!!
+                    Por favor intente nuevamente !!!!!
                 </div>
             </c:if>
 
             <c:if test="#{usuarioSesion.regEx.equalsIgnoreCase('3')}">
                 <div class="alert alert-danger" role="alert">
-                    Usuario no encontrado, Por favor revise sus datos !!!!!
+                    Usuario no encontrado, Por favor revise el correo ingresado !!!!!
                 </div>
             </c:if>
 
             <c:if test="#{usuarioSesion.regEx.equalsIgnoreCase('4')}">
-                <div class="alert alert-danger" role="alert">
-                    Usuario Bloqueado, Por favor comuniquese con el administrador !!!!!
+                <div class="alert alert-success" role="alert">
+                    Clave envia correctamente, Por favor verifique su correo  !!!!!
                 </div>
             </c:if>
 
             
             <h:form>
-                <h1 class="h3 mb-3 fw-normal">Inicio de sesion</h1>
+                <h1 class="h3 mb-3 fw-normal">Recuperar contraseña</h1>
                 <label for="inputEmail" class="visually-hidden">Correo</label>
                 <h:inputText value="#{usuarioSesion.correoIn}" id="inputEmail" class="form-control" html5:placeholder="Correo" required="true" html5:autofocus="true"/>
                 <br/>
-                <label for="inputPassword" class="visually-hidden">Clave</label>
-                <h:inputSecret  value="#{usuarioSesion.claveIn}" id="inputPassword" class="form-control" html5:placeholder="Clave" required="true"/>
-                <div class="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" value="remember-me"/> Recordar
-                    </label>    
-                </div>
-                <a href="recuperar.xhtml">Recuperar contraseña</a>
+    
+                <a href="index.xhtml">Inicio de sesion</a>
                 <br/>
-                <h:commandButton action="#{usuarioSesion.validarUsuario()}" style="display: inline!important; width: 50%!important; margin-top: 10px" class="btn btn-lg btn-primary" value="Ingresar" />
-                <a href="register.xhtml" style="display: inline!important; width: 50%!important;  margin-top: 10px" class="btn btn-lg btn-success" >Registrar</a> <br/>
+                
+                <h:commandButton action="#{usuarioSesion.recuperarClave()}" style="display: inline!important; width: 100%!important; margin-top: 10px" class="btn btn-lg btn-primary" value="Recuperar contraseña" />
                 <p class="mt-5 mb-3 text-muted">&copy; ADSI–2021</p>
             </h:form>
         </main>

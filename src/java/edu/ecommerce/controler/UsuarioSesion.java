@@ -9,10 +9,10 @@ import edu.ecommerce.entity.Rol;
 import edu.ecommerce.entity.Usuario;
 import edu.ecommerce.facade.RolFacadeLocal;
 import edu.ecommerce.facade.UsuarioFacadeLocal;
+import edu.ecommerce.utilidades.Email;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -33,6 +33,10 @@ public class UsuarioSesion implements Serializable {
 
     private Usuario usuReg = new Usuario();
     private Usuario usuLog = new Usuario();
+    private Usuario usuGestion = new Usuario();
+
+    private List<Rol> noRoles = new ArrayList<>();
+
     private String regEx = "0";
     private String correoIn = "";
     private String claveIn = "";
@@ -57,6 +61,13 @@ public class UsuarioSesion implements Serializable {
 
     }
 
+    public void tomarDatos(Usuario usuarioIn) {
+        usuGestion = new Usuario();
+        usuGestion = usuarioIn;
+        noRoles.clear();
+        noRoles.addAll(rolFacadeLocal.noRoles(usuGestion.getIdUsuario()));
+    }
+
     public void validarUsuario() {
         try {
             usuLog = usuarioFacadeLocal.validarUsuario(correoIn, claveIn);
@@ -77,7 +88,26 @@ public class UsuarioSesion implements Serializable {
     }
     
     
-        public void eliminarUsuario( int id_usuario) {
+     public void recuperarClave() {
+        try {
+            usuLog = usuarioFacadeLocal.buscarPorCorreo(correoIn);
+            if (usuLog == null) {
+                regEx = "3";
+            } else {
+                 String  nuevaClave = "ADSI-" + 100000 * Math.random();
+                 usuLog.setClave(nuevaClave);
+                 usuarioFacadeLocal.edit(usuLog);
+                 Email.sendClaves(usuLog.getCorreo(), usuLog.getNombre()+" "+ usuLog.getApellido() , nuevaClave);
+                regEx = "4";
+            }
+
+        } catch (Exception e) {
+            regEx = "2";
+        }
+    }
+     
+
+    public void eliminarUsuario(int id_usuario) {
         try {
             usuReg = usuarioFacadeLocal.find(id_usuario);
             usuarioFacadeLocal.remove(usuReg);
@@ -86,13 +116,27 @@ public class UsuarioSesion implements Serializable {
             regEx = "2";
         }
     }
-    
-    public void activaUsuario(int id_usuario){
+
+    public void activaUsuario(int id_usuario) {
         usuarioFacadeLocal.cambioEstado(id_usuario, 1);
     }
-    
-     public void desactivaUsuario(int id_usuario){
+
+    public void desactivaUsuario(int id_usuario) {
         usuarioFacadeLocal.cambioEstado(id_usuario, 0);
+    }
+
+    public void adicionaRol(Rol rolIn) {
+        rolFacadeLocal.ingresarRol(usuGestion.getIdUsuario(), rolIn.getIdrol());
+        usuGestion = usuarioFacadeLocal.buscarPorId(usuGestion.getIdUsuario());
+         noRoles.clear();
+        noRoles.addAll(rolFacadeLocal.noRoles(usuGestion.getIdUsuario()));
+    }
+
+    public void removerRol(Rol rolIn) {
+        rolFacadeLocal.removerRol(usuGestion.getIdUsuario(), rolIn.getIdrol());
+        usuGestion = usuarioFacadeLocal.buscarPorId(usuGestion.getIdUsuario());
+         noRoles.clear();
+        noRoles.addAll(rolFacadeLocal.noRoles(usuGestion.getIdUsuario()));
     }
 
     public List<Usuario> listaUsuarios() {
@@ -137,6 +181,22 @@ public class UsuarioSesion implements Serializable {
 
     public void setUsuLog(Usuario usuLog) {
         this.usuLog = usuLog;
+    }
+
+    public Usuario getUsuGestion() {
+        return usuGestion;
+    }
+
+    public void setUsuGestion(Usuario usuGestion) {
+        this.usuGestion = usuGestion;
+    }
+
+    public List<Rol> getNoRoles() {
+        return noRoles;
+    }
+
+    public void setNoRoles(List<Rol> noRoles) {
+        this.noRoles = noRoles;
     }
 
 }

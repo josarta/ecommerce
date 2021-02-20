@@ -31,5 +31,9 @@ public interface RolFacadeLocal {
     int count();
 
     public boolean ingresarRol(int id_usuario, int id_rol);
+
+    public List<Rol> noRoles(int id_usuario);
+
+    public boolean removerRol(int id_usuario, int id_rol);
     
 }

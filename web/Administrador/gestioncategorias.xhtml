@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+
+        <title>Administrador !</title>
+    </h:head>
+    <h:body>
+
+        <div class="container">
+
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="#">ADSI</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Administrador <span class="sr-only">(current)</span></a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#">#{usuarioSesion.usuLog.nombre}  #{usuarioSesion.usuLog.apellido}</a>
+                        </li>
+
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Acciones
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Mis datos</a>
+                                <a class="dropdown-item" href="index.xhtml">Gestion Usuarios</a>
+                                <a class="dropdown-item" href="gestionproductos.xhtml">Gestion Productos</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="../index.xhtml">Cerrar Session</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search"/>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                    </form>
+                </div>
+            </nav>
+
+
+            <div class="row">
+                <c:forEach items="#{usuarioSesion.usuLog.rolCollection}" var="rol">
+                    <a href="../#{rol.nombre}/index.xhtml">
+                        <figure class="figure">
+                            <img src="../imagen/#{rol.nombre}.png" style="height: 60px; width: 60px; margin-top: 10px; margin-right: 10px" class="figure-img img-fluid rounded" alt="#{rol.nombre}."/>
+                            <figcaption class="figure-caption">#{rol.nombre}.</figcaption>
+                        </figure>
+                    </a>
+                </c:forEach>
+            </div>
+
+            <div class="row">
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Nueva categoria
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <h:form>
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Crear categoria</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="inputNombre" class="visually-hidden">Nombre Categoria</label>
+                                    <h:inputText value="#{categoriaView.nombreCategoria}" id="inputNombre" class="form-control" html5:placeholder="Nombre" required="true" html5:autofocus="true"/>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <h:commandButton action="#{categoriaView.crearCategoria()}" class="btn btn-primary" value="Guardar"/>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalSub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <h:form>
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Crear Sub categoria</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="inputNombre" class="visually-hidden">Nombre subCategoria</label>
+                                    <h:inputText value="#{categoriaView.nombreSubCategoria}" id="inputNombre" class="form-control" html5:placeholder="Nombre" required="true" html5:autofocus="true"/>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <h:commandButton action="#{categoriaView.crearSubCategoria()}" class="btn btn-primary" value="Guardar"/>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalVerSub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <h:panelGroup id="modalVerSub">
+                                <h:form>
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Categoria = #{categoriaView.categoriaGestion.nombre}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <ul class="list-group">
+                                            <c:forEach items="#{categoriaView.categoriaGestion.subCategoriaCollection}" var="sub">
+
+
+                                                <li class="list-group-item">#{sub.nombre}
+
+                                                    <h:commandButton action="#{categoriaView.removerSubCategoria(sub)}"  class="btn btn-dager" value="X">
+                                                        <f:ajax render="@form"></f:ajax>
+                                                    </h:commandButton>
+
+                                                    </li>
+                                            </c:forEach>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </h:form>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:form>
+                    <c:forEach items="#{categoriaView.leerCategorias()}" var="cat">
+                        <div class="card ">
+                            <div class="card-header">
+                                #{cat.nombre} cantidad de sub # #{cat.subCategoriaCollection.size()}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Codigo # #{cat.idcategoria}</h5>
+                                <h:commandButton action="#{categoriaView.actualCategoria(cat)}" html5:data-toggle="modal" html5:data-target="#exampleModalSub" class="btn btn-primary" value="Add Sub">
+                                    <f:ajax render="modalVerSub"></f:ajax>
+                                </h:commandButton>
+
+                                <h:commandButton action="#{categoriaView.actualCategoria(cat)}" html5:data-toggle="modal" html5:data-target="#exampleModalVerSub" class="btn btn-success" value="Ver Sub">
+                                    <f:ajax render="modalVerSub" ></f:ajax>
+                                </h:commandButton>
+                            </div>
+                        </div>
+
+
+                    </c:forEach>
+                </h:form>
+
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    </h:body>
+</html>
