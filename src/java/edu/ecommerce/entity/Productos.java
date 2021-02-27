@@ -19,7 +19,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -55,11 +54,9 @@ public class Productos implements Serializable {
     private Float valor;
     @ManyToMany(mappedBy = "productosCollection", fetch = FetchType.EAGER)
     private Collection<Imagenes> imagenesCollection;
-    @OneToMany(mappedBy = "fksubcategoriaId", fetch = FetchType.EAGER)
-    private Collection<Productos> productosCollection;
-    @JoinColumn(name = "fk_sub_categoriaId", referencedColumnName = "idProductos")
+    @JoinColumn(name = "fk_sub_categoriaId", referencedColumnName = "idsub_categoria")
     @ManyToOne(fetch = FetchType.EAGER)
-    private Productos fksubcategoriaId;
+    private SubCategoria fksubcategoriaId;
 
     public Productos() {
     }
@@ -124,19 +121,11 @@ public class Productos implements Serializable {
         this.imagenesCollection = imagenesCollection;
     }
 
-    public Collection<Productos> getProductosCollection() {
-        return productosCollection;
-    }
-
-    public void setProductosCollection(Collection<Productos> productosCollection) {
-        this.productosCollection = productosCollection;
-    }
-
-    public Productos getFksubcategoriaId() {
+    public SubCategoria getFksubcategoriaId() {
         return fksubcategoriaId;
     }
 
-    public void setFksubcategoriaId(Productos fksubcategoriaId) {
+    public void setFksubcategoriaId(SubCategoria fksubcategoriaId) {
         this.fksubcategoriaId = fksubcategoriaId;
     }
 

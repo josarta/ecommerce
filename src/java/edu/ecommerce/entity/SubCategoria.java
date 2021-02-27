@@ -6,6 +6,7 @@
 package edu.ecommerce.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -42,6 +44,8 @@ public class SubCategoria implements Serializable {
     @JoinColumn(name = "fk_categoriaId", referencedColumnName = "idcategoria")
     @ManyToOne(fetch = FetchType.EAGER)
     private Categoria fkcategoriaId;
+    @OneToMany(mappedBy = "fksubcategoriaId", fetch = FetchType.EAGER)
+    private Collection<Productos> productosCollection;
 
     public SubCategoria() {
     }
@@ -72,6 +76,14 @@ public class SubCategoria implements Serializable {
 
     public void setFkcategoriaId(Categoria fkcategoriaId) {
         this.fkcategoriaId = fkcategoriaId;
+    }
+
+    public Collection<Productos> getProductosCollection() {
+        return productosCollection;
+    }
+
+    public void setProductosCollection(Collection<Productos> productosCollection) {
+        this.productosCollection = productosCollection;
     }
 
     @Override

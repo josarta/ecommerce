@@ -31,5 +31,7 @@ public interface SubCategoriaFacadeLocal {
     int count();
 
     public boolean ingresarSubCategoria(String nombre, int id_categoria);
+
+    public List<SubCategoria> leerSubCategoria(int id_categoria);
     
 }

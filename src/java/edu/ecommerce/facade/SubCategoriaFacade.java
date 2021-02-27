@@ -6,6 +6,7 @@
 package edu.ecommerce.facade;
 
 import edu.ecommerce.entity.SubCategoria;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -40,6 +41,17 @@ public class SubCategoriaFacade extends AbstractFacade<SubCategoria> implements 
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    @Override
+    public List<SubCategoria> leerSubCategoria(int id_categoria) {
+        try {
+            Query q = em.createQuery("SELECT s FROM SubCategoria s WHERE s.fkcategoriaId.idcategoria = :id_categoria");
+            q.setParameter("id_categoria", id_categoria);
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
         }
     }
 

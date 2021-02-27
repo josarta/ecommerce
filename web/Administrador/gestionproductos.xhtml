@@ -12,6 +12,10 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
 
+
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
         <title>Administrador !</title>
     </h:head>
     <h:body>
@@ -71,26 +75,81 @@
 
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                   Producto nuevo
+                    Producto nuevo
                 </button>
+
+
+                <!--                <div>
+                
+                                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                                        <div class="container-fluid">
+                                            <a class="navbar-brand" href="#">Lista categorias</a>
+                                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                                <span class="navbar-toggler-icon"></span>
+                                            </button>
+                                            <div class="collapse navbar-collapse" id="navbarNav">
+                                                <c:forEach items="#{productosView.todasCategorias}" var="cat">
+                
+                                                </c:forEach>
+                                                <ul class="navbar-nav">
+                                                    <c:forEach items="#{productosView.todasCategorias}" var="cat">
+                                                        <li class="nav-item">
+                                                            <a class="nav-link active" aria-current="page" href="#">#{cat.nombre}</a>
+                                                        </li>
+                                                    </c:forEach>                                  
+                
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </nav>
+                                </div>-->
+
+
 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Producto Nuevo</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body">
-                                ...
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
+                            <h:form>
+                                <div class="modal-body">
+                                    <label for="inputNombre" class="visually-hidden">Nombre </label>
+                                    <h:inputText value="#{productosView.nombreProducto}" id="inputNombre" class="form-control" html5:placeholder="Nombre" required="true" html5:autofocus="true"/>
+
+                                    <label for="inputDescripcion" class="visually-hidden">Descripcion</label>
+                                    <h:inputText value="#{productosView.descripcion}" id="inputDescripcion" class="form-control" html5:placeholder="Descripcion" required="true" html5:autofocus="true"/>
+
+
+                                    <label for="inputCantidad" class="visually-hidden">Cantidad</label>
+                                    <h:inputText value="#{productosView.cantidad}" id="inputCantidad" class="form-control" html5:placeholder="Cantidad" required="true" html5:autofocus="true"/>
+
+                                    <label for="inputValor" class="visually-hidden">Valor</label>
+                                    <h:inputText value="#{productosView.valor}" id="inputValor" class="form-control" html5:placeholder="Valor" required="true" html5:autofocus="true"/>
+
+                                    <label for="inputCategoria" class="visually-hidden">Categoria</label>
+                                    <h:selectOneMenu  class="form-control" value="#{productosView.categoriaId}"  >
+                                        <f:selectItems itemLabel="#{cat.nombre}" itemValue="#{cat.idcategoria}" var="cat" value="#{productosView.todasCategorias}"  ></f:selectItems>
+                                        <f:ajax render="panelSub" listener="#{productosView.leerSubCategorias()}"  event="change" ></f:ajax>
+                                    </h:selectOneMenu>
+
+                                    <h:panelGroup id="panelSub">   
+                                        <label for="inputSubCategoria" class="visually-hidden">Sub Categoria</label>
+                                        <h:selectOneMenu  class="form-control" value="#{productosView.fk_subCategoria}"  >
+                                            <f:selectItems itemLabel="#{cat.nombre}" itemValue="#{cat.idsubCategoria}" var="cat" value="#{productosView.todasSubCategorias}"  ></f:selectItems>
+                                        </h:selectOneMenu>
+                                    </h:panelGroup>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <h:commandButton  class="btn btn-primary" action="#{productosView.crearProductos()}" value="Guardar"> </h:commandButton>
+                                </div>
+                            </h:form>
                         </div>
                     </div>
                 </div>
@@ -98,9 +157,69 @@
 
 
             </div>
+
+            <div class="row">
+                <table class="table" id="tablaProductos">
+                    <thead>
+                        <tr>
+                            <th scope="col"># Cod Producto</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Sub-Categoria</th>
+                            <th scope="col">Imagenes</th>
+                            <th scope="col">Acciones</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <c:forEach items="#{productosView.todosProductos}" var="pt">
+
+                            <tr>
+                                <td>#{pt.idProductos}</td>
+                                <td>#{pt.nombre}</td>
+                                <td>#{pt.descripcion}</td>
+                                <td>#{pt.estado}</td>  
+                                <td>#{pt.cantidad}</td>
+                                <td>#{pt.valor}</td> 
+                                <td>#{pt.fksubcategoriaId.fkcategoriaId.nombre}</td>
+                                <td>#{pt.fksubcategoriaId.nombre}</td> 
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </c:forEach>
+
+                    </tbody>
+                </table>
+
+            </div>
+
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                $('#tablaProductos').DataTable({
+                    "language": {
+                        "lengthMenu": "Ver _MENU_ registros por pagina",
+                        "zeroRecords": "No funciona - disculpas",
+                        "info": "Pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "No se encontraron registros",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    }
+                });
+            });
+
+
+
+        </script>
+
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 

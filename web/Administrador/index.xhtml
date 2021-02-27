@@ -11,6 +11,11 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
+
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
 
         <title>Administrador !</title>
     </h:head>
@@ -42,7 +47,7 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#">Mis datos</a>
                                 <a class="dropdown-item" href="gestionproductos.xhtml">Gestion Productos</a>
-                                 <a class="dropdown-item" href="gestioncategorias.xhtml">Gestion Categorias</a>
+                                <a class="dropdown-item" href="gestioncategorias.xhtml">Gestion Categorias</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="../index.xhtml">Cerrar Session</a>
                             </div>
@@ -69,7 +74,7 @@
 
             <div class="row">
 
-                <table class="table">
+                <table class="table" id="tablaUsuarios">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">Tipo de documento</th>
@@ -178,7 +183,26 @@
             </div>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                $('#tablaUsuarios').DataTable({
+                    "language": {
+                        "lengthMenu": "Ver _MENU_ registros por pagina",
+                        "zeroRecords": "No funciona - disculpas",
+                        "info": "Pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "No se encontraron registros",
+                        "infoFiltered": "(filtered from _MAX_ total records)"
+                    }
+                });
+            });
+
+
+
+        </script>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 

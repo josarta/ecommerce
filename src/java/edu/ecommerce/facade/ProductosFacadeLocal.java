@@ -29,5 +29,9 @@ public interface ProductosFacadeLocal {
     List<Productos> findRange(int[] range);
 
     int count();
+
+    public boolean ingresarProducto(String nombre, String descripcion, String cantidad, int valor, int id_subCategoria);
+
+    public List<Productos> leerProductosCategoria(int id_categoria);
     
 }
