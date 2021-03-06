@@ -73,32 +73,36 @@
             </div>
 
             <div class="row">
+                <h:form>
+                    <table class="table" id="tablaUsuarios">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Tipo de documento</th>
+                                <th scope="col">Documento</th>
+                                <th scope="col">Nombres / Apellidos</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Acciones</th>
 
-                <table class="table" id="tablaUsuarios">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">Tipo de documento</th>
-                            <th scope="col">Documento</th>
-                            <th scope="col">Nombres / Apellidos</th>
-                            <th scope="col">Correo</th>
-                            <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <h:form>
                             <c:forEach items="#{usuarioSesion.listaUsuarios()}" var="usuario">
+
+
                                 <tr>
                                     <th scope="row">#{usuario.tipoDocumento}</th>
                                     <td>#{usuario.documento}</td>
                                     <td>#{usuario.nombre} #{usuario.apellido}</td>
                                     <td>#{usuario.correo}</td>
                                     <td>
-                                        <c:if test="#{usuario.estado == 1}">
-                                            <h:commandButton action="#{usuarioSesion.desactivaUsuario(usuario.idUsuario)}" class="btn btn-outline-secondary" value="Desactivar"/>
-                                        </c:if>
-                                        <c:if test="#{usuario.estado == 0}">
-                                            <h:commandButton action="#{usuarioSesion.activaUsuario(usuario.idUsuario)}" class="btn btn-outline-primary" value="Activar"/>
+                                        <c:if test="#{usuarioSesion.usuLog.documento  != usuario.documento}">
+                                            <c:if test="#{usuario.estado == 1}">
+                                                <h:commandButton action="#{usuarioSesion.desactivaUsuario(usuario.idUsuario)}" class="btn btn-outline-secondary" value="Desactivar"/>
+                                            </c:if>
+                                            <c:if test="#{usuario.estado == 0}">
+                                                <h:commandButton action="#{usuarioSesion.activaUsuario(usuario.idUsuario)}" class="btn btn-outline-primary" value="Activar"/>
+                                            </c:if>
                                         </c:if>
                                         <h:commandButton action="#{usuarioSesion.tomarDatos(usuario)}" html5:data-toggle="modal" html5:data-target="#exampleModal" class="btn btn-primary" value="perfiles">
                                             <f:ajax render="modalRoles"></f:ajax>
@@ -106,12 +110,16 @@
                                         <h:commandButton action="#{usuarioSesion.eliminarUsuario(usuario.idUsuario)}" class="btn btn-outline-danger" value="X"/>
                                     </td>
                                 </tr>
+
+
+
+
                             </c:forEach>
-                        </h:form>
-                    </tbody>
-                </table>
 
+                        </tbody>
+                    </table>
 
+                </h:form>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document" style="max-width: 675px;">

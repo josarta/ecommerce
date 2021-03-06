@@ -2,7 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -56,16 +58,90 @@
             <div class="row">
                 <c:forEach items="#{usuarioSesion.usuLog.rolCollection}" var="rol">
                     <a href="../#{rol.nombre}/index.xhtml">
-                    <figure class="figure">
-                        <img src="../imagen/#{rol.nombre}.png" style="height: 60px; width: 60px; margin-top: 10px; margin-right: 10px" class="figure-img img-fluid rounded" alt="#{rol.nombre}."/>
-                        <figcaption class="figure-caption">#{rol.nombre}.</figcaption>
-                    </figure>
+                        <figure class="figure">
+                            <img src="../imagen/#{rol.nombre}.png" style="height: 60px; width: 60px; margin-top: 10px; margin-right: 10px" class="figure-img img-fluid rounded" alt="#{rol.nombre}."/>
+                            <figcaption class="figure-caption">#{rol.nombre}.</figcaption>
+                        </figure>
                     </a>
                 </c:forEach>
 
 
 
             </div>
+
+            <h:form>
+
+                <div class="row" style="margin-top: 30px">
+
+                    <c:forEach items="#{clienteSession.todas}" var="cate">
+                        <h:commandButton class="btn btn-secondary" style="margin-right: 10px;" action="#{clienteSession.categoriaSelecionada(cate)}" value="#{cate.nombre}">
+                            <f:ajax render="panelSubcategorias"> </f:ajax>
+                        </h:commandButton>
+                    </c:forEach>     
+
+                </div>
+
+                <div class="row" style="margin-top: 20px">
+                    <h:panelGroup id="panelSubcategorias">
+                        <c:forEach items="#{clienteSession.categoriaGestion.subCategoriaCollection}" var="subSelec">
+                            <h:commandButton class="btn btn-primary" style="margin-right: 10px;" action="#{clienteSession.subCategoriaSelecionada(subSelec)}" value="#{subSelec.nombre}">
+                                <f:ajax render="panelProductos"> </f:ajax>
+                            </h:commandButton>
+                        </c:forEach>
+                    </h:panelGroup>
+                </div>
+
+            </h:form>
+
+
+            <h:panelGroup id="panelProductos">
+                <div class="row" style="margin-top: 20px">
+                    <c:forEach items="#{clienteSession.subCategoriaGestion.productosCollection}" var="producto" varStatus="posCarrusel">
+
+                        <div class="card" style="width: 18rem;margin-bottom: 15px;margin-right: 15px;">
+                            <div id="carouselExampleIndicators#{posCarrusel.count}" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    <c:forEach items="#{producto.imagenesCollection}" var="img" varStatus="status" >
+                                        <li data-target="#carouselExampleIndicators#{posCarrusel.count}" data-slide-to="#{status.count-1}"  class="#{status.count == 1 ?'active':''}"   ></li>
+                                    </c:forEach>
+                                </ol>
+                                <div class="carousel-inner">
+
+                                    <ui:repeat varStatus="status" var="img2" value="#{producto.imagenesCollection}">
+
+                                        <div class="carousel-item  #{status.index == 0 ?'active':''}">
+                                            <h:graphicImage class="d-block w-100" id="imgen-#{status.index}" value="/images/#{img2.ruta}"  />
+                                        </div>
+
+                                    </ui:repeat>
+
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators#{posCarrusel.count}" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators#{posCarrusel.count}" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+
+
+
+
+                            <div class="card-body">
+                                <h5 class="card-title">#{producto.nombre}</h5>
+                                <p class="card-text">#{producto.cantidad}</p>
+                                <a href="#" class="btn btn-primary"> $ #{producto.valor}</a>
+                            </div>
+                        </div>
+
+
+                    </c:forEach>
+                </div>
+            </h:panelGroup>
+
+
         </div>
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

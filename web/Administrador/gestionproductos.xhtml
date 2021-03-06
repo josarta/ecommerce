@@ -4,17 +4,20 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
-
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
 
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>   
 
         <title>Administrador !</title>
     </h:head>
@@ -79,31 +82,6 @@
                 </button>
 
 
-                <!--                <div>
-                
-                                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                                        <div class="container-fluid">
-                                            <a class="navbar-brand" href="#">Lista categorias</a>
-                                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                                                <span class="navbar-toggler-icon"></span>
-                                            </button>
-                                            <div class="collapse navbar-collapse" id="navbarNav">
-                                                <c:forEach items="#{productosView.todasCategorias}" var="cat">
-                
-                                                </c:forEach>
-                                                <ul class="navbar-nav">
-                                                    <c:forEach items="#{productosView.todasCategorias}" var="cat">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link active" aria-current="page" href="#">#{cat.nombre}</a>
-                                                        </li>
-                                                    </c:forEach>                                  
-                
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </nav>
-                                </div>-->
-
 
 
                 <!-- Modal -->
@@ -158,47 +136,125 @@
 
             </div>
 
-            <div class="row">
-                <table class="table" id="tablaProductos">
-                    <thead>
-                        <tr>
-                            <th scope="col"># Cod Producto</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Cantidad</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Categoria</th>
-                            <th scope="col">Sub-Categoria</th>
-                            <th scope="col">Imagenes</th>
-                            <th scope="col">Acciones</th>
-
-
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        <c:forEach items="#{productosView.todosProductos}" var="pt">
-
+            <div class="row" style="margin-top: 30px">
+                <h:form>
+                    <table class="table" id="tablaProductos">
+                        <thead>
                             <tr>
-                                <td>#{pt.idProductos}</td>
-                                <td>#{pt.nombre}</td>
-                                <td>#{pt.descripcion}</td>
-                                <td>#{pt.estado}</td>  
-                                <td>#{pt.cantidad}</td>
-                                <td>#{pt.valor}</td> 
-                                <td>#{pt.fksubcategoriaId.fkcategoriaId.nombre}</td>
-                                <td>#{pt.fksubcategoriaId.nombre}</td> 
-                                <td></td>
-                                <td></td>
+                                <th scope="col"># Cod Producto</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Descripcion</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Valor</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Sub-Categoria</th>
+                                <th scope="col">Imagenes</th>
+                                <th scope="col">Acciones</th>
+
+
                             </tr>
-                        </c:forEach>
+                        </thead>
+                        <tbody>
 
-                    </tbody>
-                </table>
+                            <c:forEach items="#{productosView.todosProductos}" var="pt">
 
+                                <tr>
+                                    <td>#{pt.idProductos}</td>
+                                    <td>#{pt.nombre}</td>
+                                    <td>#{pt.descripcion}</td>
+                                    <td>#{pt.estado}</td>  
+                                    <td>#{pt.cantidad}</td>
+                                    <td>#{pt.valor}</td> 
+                                    <td>#{pt.fksubcategoriaId.fkcategoriaId.nombre}</td>
+                                    <td>#{pt.fksubcategoriaId.nombre}</td> 
+                                    <td>
+                                        <h:commandButton class="btn btn-primary" html5:data-toggle="modal" html5:data-target="#modalImgenProductos" action="#{productosView.guardadProductoGestion(pt)}" value="Mis imagenes --> #{pt.imagenesCollection.size()}">
+                                            <f:ajax render="contenidoImagenes contenidoBody"></f:ajax>
+                                        </h:commandButton>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </c:forEach>
+
+                        </tbody>
+                    </table>
+                </h:form>
             </div>
 
+        </div>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalImgenProductos" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h:panelGroup id="contenidoImagenes">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Imagenes #{productosView.productoGestion.nombre}  Cantidad -> #{productosView.productoGestion.imagenesCollection.size()} </h5>      
+                        </h:panelGroup>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <h:panelGroup id="contenidoBody">
+
+                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    <c:forEach items="#{productosView.productoGestion.imagenesCollection}" var="img" varStatus="status" >
+                                        <li data-target="#carouselExampleIndicators" data-slide-to="#{status.count-1}"  class="#{status.count == 1 ?'active':''}"   ></li>
+                                    </c:forEach>
+                                </ol>
+                                <div class="carousel-inner">
+
+                                    <ui:repeat varStatus="status" var="img2" value="#{productosView.productoGestion.imagenesCollection}">
+
+                                        <div class="carousel-item  #{status.index == 0 ?'active':''}">
+                                            <h:graphicImage class="d-block w-100" id="imgen-#{status.index}" value="/images/#{img2.ruta}"  />
+                                        </div>
+
+                                    </ui:repeat>
+
+
+
+
+
+
+
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+
+                        </h:panelGroup>
+                    </div>
+                    <div class="modal-footer">  
+                        <h:form id="modal" enctype="multipart/form-data">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <h:inputFile id="btnCargaImagen" style="display: none" onchange="$('#modal\\:btnIr').click()" value="#{productosView.archivoImagen}"></h:inputFile>
+                            <button id="reset" style="display: none" type="reset"> borrar formulario</button>
+                            <h:commandButton id="btnIr" style="display: none"  action="#{productosView.cargaImagen()}" value="ir al controlador">
+                                <f:ajax render="contenidoBody contenidoImagenes " execute="modal:btnCargaImagen"></f:ajax> 
+                            </h:commandButton>
+                            <button type="button" onclick="$('#modal\\:btnCargaImagen').click()" class="btn btn-primary">+</button> 
+                        </h:form>                        
+                    </div>
+                </div>
+
+
+            </div>
         </div>
 
         <script type="text/javascript">

@@ -63,4 +63,36 @@ public class ProductosFacade extends AbstractFacade<Productos> implements Produc
     }
     
     
+       
+    @Override
+    public boolean imagenProducto(int id_imagen ,int id_producto) {
+        try {
+            Query q = em.createNativeQuery("INSERT INTO productos_has_imagenes (productos_idProductos, imagenes_idimagenes) VALUES (?, ?)");
+            q.setParameter(1, id_producto);
+            q.setParameter(2, id_imagen);           
+            q.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    
+    
+    @Override
+    public Productos productoActualizado(int id_producto){
+        try {
+            em.getEntityManagerFactory().getCache().evictAll();
+            Query q = em.createQuery("SELECT p FROM Productos p WHERE p.idProductos = :id_producto");
+            q.setParameter("id_producto", id_producto);
+            return (Productos) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }    
+    }
+    
+    
+    
+    
+    
 }

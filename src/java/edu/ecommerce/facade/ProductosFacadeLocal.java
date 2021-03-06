@@ -33,5 +33,9 @@ public interface ProductosFacadeLocal {
     public boolean ingresarProducto(String nombre, String descripcion, String cantidad, int valor, int id_subCategoria);
 
     public List<Productos> leerProductosCategoria(int id_categoria);
+
+    public boolean imagenProducto(int id_imagen, int id_producto);
+
+    public Productos productoActualizado(int id_producto);
     
 }

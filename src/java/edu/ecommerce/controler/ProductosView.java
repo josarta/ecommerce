@@ -6,18 +6,29 @@
 package edu.ecommerce.controler;
 
 import edu.ecommerce.entity.Categoria;
+import edu.ecommerce.entity.Imagenes;
 import edu.ecommerce.entity.Productos;
 import edu.ecommerce.entity.SubCategoria;
 import edu.ecommerce.facade.CategoriaFacadeLocal;
+import edu.ecommerce.facade.ImagenesFacadeLocal;
 import edu.ecommerce.facade.ProductosFacadeLocal;
 import edu.ecommerce.facade.SubCategoriaFacadeLocal;
+import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.servlet.http.Part;
+import org.primefaces.PrimeFaces;
+import org.primefaces.shaded.commons.io.FilenameUtils;
 
 /**
  *
@@ -33,7 +44,10 @@ public class ProductosView implements Serializable {
     SubCategoriaFacadeLocal subCategoriaFacadeLocal;
     @EJB
     ProductosFacadeLocal productosFacadeLocal;
+    @EJB
+    ImagenesFacadeLocal imagenesFacadeLocal;
 
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
     private String nombreProducto;
     private String descripcion;
     private String cantidad = "0";
@@ -41,10 +55,13 @@ public class ProductosView implements Serializable {
     private int fk_subCategoria = 0;
     private int categoriaId = 0;
     private int categoriaIdtabla = 0;
+    private Part archivoImagen;
 
     private List<Categoria> todasCategorias = new ArrayList<>();
     private List<SubCategoria> todasSubCategorias = new ArrayList<>();
     private List<Productos> todosProductos = new ArrayList<>();
+
+    private Productos productoGestion = new Productos();
 
     /**
      * Creates a new instance of Productos
@@ -55,7 +72,9 @@ public class ProductosView implements Serializable {
     @PostConstruct
     public void cargaInicial() {
         todasCategorias.addAll(categoriaFacadeLocal.findAll());
-        todasSubCategorias.addAll(subCategoriaFacadeLocal.leerSubCategoria(todasCategorias.get(0).getIdcategoria()));
+        if(todasCategorias.size() > 0){
+             todasSubCategorias.addAll(subCategoriaFacadeLocal.leerSubCategoria(todasCategorias.get(0).getIdcategoria()));
+        }   
         todosProductos.addAll(productosFacadeLocal.findAll());
     }
 
@@ -79,6 +98,55 @@ public class ProductosView implements Serializable {
         todosProductos.clear();
         todosProductos.addAll(productosFacadeLocal.leerProductosCategoria(categoriaIdtabla));
 
+    }
+
+    public void cargaImagen() {
+        String mensajes = "";
+        if (archivoImagen != null) {
+            if (archivoImagen.getSize() > 4000000) {
+                mensajes = "Swal.fire('Error!', 'El archivo es muy grande!', 'error')";
+            } else if (!"image/jpeg".equals(archivoImagen.getContentType())) {
+                mensajes = "Swal.fire('Error!', 'El archivo no es una imagen!', 'error')";
+            }
+            if (mensajes.isEmpty()) {
+                File carpeta = new File("D:/ecommerce/imagenes/productos");
+                if (!carpeta.exists()) {
+                    carpeta.mkdirs();
+                }
+                try (InputStream is = archivoImagen.getInputStream()) {
+                    Calendar hoy = Calendar.getInstance();
+                    String nombreArchivo = sdf.format(hoy.getTime()) + ".";
+                    nombreArchivo += FilenameUtils.getExtension(archivoImagen.getSubmittedFileName());
+                    Files.copy(is, (new File(carpeta, nombreArchivo)).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    Imagenes imgNew = new Imagenes();
+                    if (archivoImagen.getSubmittedFileName().length() > 30) {
+                        imgNew.setNombre(archivoImagen.getSubmittedFileName().substring(0, 30));
+                    } else {
+                        imgNew.setNombre(archivoImagen.getSubmittedFileName());
+
+                    }
+                    imgNew.setRuta(nombreArchivo);
+                    imgNew.setTipo("Producto");
+                    imagenesFacadeLocal.create(imgNew);
+                    productosFacadeLocal.imagenProducto(imgNew.getIdimagenes(), productoGestion.getIdProductos());
+                    productoGestion = productosFacadeLocal.productoActualizado(productoGestion.getIdProductos());
+                } catch (Exception e) {
+                    mensajes = "Swal.fire('Error!', 'No se pudo guardar la imagen!', 'error')";
+
+                }
+
+            }
+
+        } else {
+            mensajes = "Swal.fire('Error!', 'No se encontro una imagen!', 'error')";
+        }
+        PrimeFaces.current().executeScript(mensajes);
+        PrimeFaces.current().executeScript("$('#reset').click()");
+    }
+
+    public void guardadProductoGestion(Productos productoSelect) {
+        productoGestion = new Productos();
+        productoGestion = productoSelect;
     }
 
     public String getNombreProducto() {
@@ -159,6 +227,22 @@ public class ProductosView implements Serializable {
 
     public void setTodosProductos(List<Productos> todosProductos) {
         this.todosProductos = todosProductos;
+    }
+
+    public Productos getProductoGestion() {
+        return productoGestion;
+    }
+
+    public void setProductoGestion(Productos productoGestion) {
+        this.productoGestion = productoGestion;
+    }
+
+    public Part getArchivoImagen() {
+        return archivoImagen;
+    }
+
+    public void setArchivoImagen(Part archivoImagen) {
+        this.archivoImagen = archivoImagen;
     }
 
 }

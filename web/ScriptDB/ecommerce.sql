@@ -26,7 +26,7 @@ CREATE TABLE `categoria` (
   `idcategoria` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idcategoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +35,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (10,'Mercado'),(12,'Hogar'),(13,'Ferreteria');
+INSERT INTO `categoria` VALUES (14,'Mercado'),(15,'Tecnología '),(16,'Moda y accesorios'),(19,'Hogar'),(21,'Salud y Belleza'),(27,'Deportes'),(30,'Juguetes'),(31,'Ferreteria'),(32,'Tecnologia');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -52,7 +52,7 @@ CREATE TABLE `imagenes` (
   `tipo` varchar(45) DEFAULT NULL,
   `ruta` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idimagenes`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,6 +61,7 @@ CREATE TABLE `imagenes` (
 
 LOCK TABLES `imagenes` WRITE;
 /*!40000 ALTER TABLE `imagenes` DISABLE KEYS */;
+INSERT INTO `imagenes` VALUES (38,'tv.jpg','Producto','20210306174924584.jpg'),(39,'tv.jpg','Producto','20210306174954840.jpg'),(40,'img1.jpg','Producto','20210306175334501.jpg'),(41,'1711327-800-auto.jpg','Producto','20210306175344073.jpg'),(42,'1711327-800-auto.jpg','Producto','20210306175352020.jpg'),(43,'4947642-800-auto.jpg','Producto','20210306175602094.jpg');
 /*!40000 ALTER TABLE `imagenes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,7 +83,7 @@ CREATE TABLE `productos` (
   PRIMARY KEY (`idProductos`),
   KEY `fk_productoSub_idx` (`fk_sub_categoriaId`),
   CONSTRAINT `fk_productoSub` FOREIGN KEY (`fk_sub_categoriaId`) REFERENCES `sub_categoria` (`idsub_categoria`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +92,7 @@ CREATE TABLE `productos` (
 
 LOCK TABLES `productos` WRITE;
 /*!40000 ALTER TABLE `productos` DISABLE KEYS */;
-INSERT INTO `productos` VALUES (1,'a','a','Activo',1,1,4),(2,'a','a','Activo',1,1,4),(3,'b','b','Activo',10,10,1),(4,'b','b','Activo',10,10,1),(5,'LLave','Pequeña','Activo',120,5500,10),(6,'LLave 5.4\"','Pequeña','Activo',450,120000,10),(7,'Cama simple','de 1.20','Activo',85,500000,1),(8,'Cama doble','de 2.00 madera','Activo',10,12000000,1),(9,'Cama doble','de 2.00 madera','Activo',10,12000000,1),(10,'Cama doble','de 2.00 madera','Activo',10,12000000,1),(11,'Cama doble','de 2.00 madera','Activo',10,12000000,1);
+INSERT INTO `productos` VALUES (12,'Televisor','LG','Activo',1,50000,57),(13,'SAN REMO-PLU: 31579','Porta Jabon Dosificador 2.35L','Activo',5000,8990,53),(14,'Televisor','LG','Activo',1,50000,57),(15,'SAMSUNG','GALAXY TAB A7','Activo',20,789900,16),(16,'SAMSUNG','GALAXY TAB A7','Activo',20,789900,16),(17,'SAN REMO-PLU: 31579','Porta Jabon Dosificador 2.35L','Activo',5000,8990,53),(18,'SAMSUNG','GALAXY TAB A7','Activo',20,789900,16),(19,'DAMECOS-PLU: 244504','MOLDE PARA AREPA DAMECOS MPA','Activo',6900,8500,53),(20,'DAMECOS-PLU: 244504','MOLDE PARA AREPA DAMECOS MPA','Activo',6900,8500,53);
 /*!40000 ALTER TABLE `productos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,6 +120,7 @@ CREATE TABLE `productos_has_imagenes` (
 
 LOCK TABLES `productos_has_imagenes` WRITE;
 /*!40000 ALTER TABLE `productos_has_imagenes` DISABLE KEYS */;
+INSERT INTO `productos_has_imagenes` VALUES (12,38),(12,39),(15,40),(13,41),(13,42),(19,43);
 /*!40000 ALTER TABLE `productos_has_imagenes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,7 +164,7 @@ CREATE TABLE `sub_categoria` (
   PRIMARY KEY (`idsub_categoria`),
   KEY `fk_cat_idx` (`fk_categoriaId`),
   CONSTRAINT `fk_cat` FOREIGN KEY (`fk_categoriaId`) REFERENCES `categoria` (`idcategoria`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +173,7 @@ CREATE TABLE `sub_categoria` (
 
 LOCK TABLES `sub_categoria` WRITE;
 /*!40000 ALTER TABLE `sub_categoria` DISABLE KEYS */;
-INSERT INTO `sub_categoria` VALUES (1,'Camas',12),(2,'Cocina',12),(3,'Baños',12),(4,'Refrigerados',10),(6,'Cocina Integral',12),(7,'Cocina Integral',12),(8,'Cocina Integral',10),(9,'Tornillos',13),(10,'Herramientas',13);
+INSERT INTO `sub_categoria` VALUES (11,'Vinos y Licores',14),(12,'Cervezas',14),(13,'Cigarrillos',14),(14,'Aseo personal',14),(15,'Aseo del hogar',14),(16,'Tablet',15),(17,'Lacteos',14),(18,'Tablet',15),(19,'Carne, Pollo, y Pescado',14),(20,'Televisores',15),(21,'Televisores',15),(22,'Despensa',14),(23,'Celulares',15),(24,'Computadores',15),(25,'Farmacia',14),(26,'Maquillaje',21),(27,'Higiene Íntima',21),(28,'SmartWatch',15),(29,'Snacks',14),(30,'Higiene Oral',21),(31,'Cuidado Capilar',21),(32,'Cuidado Corporal',21),(33,'Cuidado Facial',21),(34,'Maquillaje',16),(35,'Protección Solar',21),(36,'colchones',19),(37,'Droguería',21),(38,'colchones',19),(39,'Enlatados',14),(40,'Balones',27),(41,'JUGETES',30),(42,'Muebles',19),(43,'Cuidado Masculino',21),(44,'Vestuario',16),(45,'Uniformes',27),(46,'Ropa de Hogar',19),(47,'Aretes',16),(48,'Carros',30),(49,'Suministros y Equipos Médicos',21),(50,'Collares',16),(51,'Tapabocas',21),(52,'Herramientas',30),(53,'Organizadores',19),(54,'Uniformes',27),(55,'Uniformes',27),(56,'Utensilios de Cocina',19),(57,'Televisores',32),(58,'Uniformes',27),(59,'Herramientas',31),(60,'Uniformes',27),(61,'Carros',30),(62,'Vajillas y Cristaleria',19),(63,'Herramientas',30),(64,'Muñecas',30),(65,'Muñecas',30),(66,'Balones',27),(67,'Paracaidismo',27),(68,'Skateboard',27);
 /*!40000 ALTER TABLE `sub_categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,7 +195,7 @@ CREATE TABLE `usuario` (
   `estado` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`idUsuario`),
   UNIQUE KEY `correo_UNIQUE` (`correo`)
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -202,7 +204,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (77,'Cedula',797979,'jose','sarta','josarta@misena.edu.co','12345',1),(98,'Cedula',1072660320,'Diana','Soriano','dmsoriano02@misena.edu.co','ADSI-25512.141767393525',1),(99,'Cedula',123896,'Manuel Santiago','Aguilar Moncada','aguilar@gmail.com','123',1),(100,'Cedula',1000579618,'Darren Nicolas','Duran Jamaica','dnduran8@misena.edu.co','ADSI-58491.377977091666',1),(101,'Cedula',1000944274,'Juan David','Quesada Rondon','xxjuanquesadaxx@gmail.com','ADSI-22903.620410858082',1),(102,'Cedula',1071165710,'Sergio ','Antonio','seantonio@misena.edu.co','123456',1),(103,'Cedula',109765098,'jose','chacon','jlchacon8@misena.edu.co','ADSI-30714.534341327693',1),(104,'Cedula',1000128208,'yeison','fonseca','yeisonfonseca2002@gmail.com','12345',1),(105,'Cedula',1001115080,'felipe','Nuñez','feliperubiano74@gmail.com','ADSI-37472.76983976586',1),(106,'Cedula',1007699522,'Daniel Ricardo','Gonzalez villabon','darigovi@gmail.com','ADSI-57657.7808073577',1),(107,'T.Identidad',1000354511,'Santiago Andres','Ramirez Ruiz','unknownfko@gmail.com','ADSI-6445.836700752505',1),(108,'T.Identidad',1005207198,'Melany','Obando','michellobando28@gmail.com','123456',1),(109,'Cedula',1002318561,'yeison alberto','guzman amaris','yeisonguzman2001@gmail.com','123',1),(110,'Cedula',1006128772,'jesus antonio','rozo zapata','jarozo27@misena.edu.co','ADSI-63839.41170621444',1),(111,'T.Identidad',1000590861,'Maria Paula','Santana Roa','maria@gmail.com','12345',1),(112,'Cedula',1001048594,'María Alejandra','Rabón Mendez','alejandrarabon2019@gmail.com','4884',1),(113,'Cedula',1000158623,'yeisson andres','vargas latorre','yvargaslatorre@gmail.com','yeisson12345',1),(114,'Cedula',1000158624,'Jhonathan david','vargas latorre','Footways_11@hotmail.com','david12345',1),(115,'Cedula',7634567,'yeison','amaris','yaguzman21@gmail.com','1234',1),(116,'T.Identidad',1000590861,'a','Roa','mpsantana1@misena.edu.co','ADSI-62187.477520686116',1),(117,'Cedula',12345,'Manuel','Aguilar','aguilarmoncada2002@gmail.com','ADSI-32702.44978684299',1),(119,'Cedula',1001048594,'María Alejandra','Rabón Mendez','marabon@misena.edu.co','1224',1),(121,'Cedula',1000590861,'Maria Paula','Santana Roa','mariapauu16@gmail.com','ADSI-32662.403777793505',1);
+INSERT INTO `usuario` VALUES (126,'Cedula',1071165710,'Sergio ','Antonio','seantonio@misena.edu.co','1234',1),(127,'Cedula',1001283399,'Johan','Avendaño','freakjda@gmail.com','12345',1),(129,'Cedula',1082314133,'Sergio ','Coba ','Sergiocoba73@gmail.com ','123',1),(130,'Cedula',1000590861,'Maria Paula','Santana Roa','mpsantana1@misena.edu.co','1234',1),(135,'T.Identidad',1005207198,'Melany ','Obando','Michellobando28@gmail.com ','123456',1),(137,'Cedula',1001048594,'Maria Aleejandra','Rabon Mendez','alejandrarabon2019@gmail.com','1234',1),(140,'Cedula',1000944274,'Juan','Quesada','xxjuanquesadaxx@gmail.com','1111',1),(141,'T.Identidad',1001115080,'Felipe Esteban','Nunez Rubiano','feliperubiano74@gmail.com','12345',1),(143,'T.Identidad',1000354511,'Santiago Andres','Ramirez Ruiz','unknownfko@gmail.com','ADSI-6737.107561070555',1),(146,'Cedula',1000128208,'yeison','fonseca','yeisonfonseca2002@gmail.com','1000128208',1),(148,'Cedula',1072660320,'Diana','Soriano','dmsoriano02@misena.edu.co','12345',1),(150,'Cedula',12345677,'Manuel Santiago','Aguilar Moncada','santux44@gmail.com','123',1),(151,'---',1000579618,'Darren Nicolas','Duran Jamaica','dnduran8@misena.edu.co','ahri',1);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -230,7 +232,7 @@ CREATE TABLE `usuario_has_rol` (
 
 LOCK TABLES `usuario_has_rol` WRITE;
 /*!40000 ALTER TABLE `usuario_has_rol` DISABLE KEYS */;
-INSERT INTO `usuario_has_rol` VALUES (77,1),(98,1),(99,1),(100,1),(101,1),(103,1),(105,1),(109,1),(110,1),(114,1),(99,2),(100,2),(101,2),(102,2),(103,2),(104,2),(105,2),(106,2),(107,2),(108,2),(109,2),(110,2),(111,2),(112,2),(113,2),(114,2),(115,2),(116,2),(117,2),(119,2),(121,2),(98,3),(99,3),(100,3),(101,3),(103,3),(105,3),(109,3),(110,3);
+INSERT INTO `usuario_has_rol` VALUES (126,1),(127,1),(129,1),(130,1),(135,1),(137,1),(140,1),(141,1),(143,1),(146,1),(148,1),(150,1),(126,2),(127,2),(129,2),(130,2),(137,2),(140,2),(141,2),(143,2),(146,2),(148,2),(150,2),(151,2),(126,3),(127,3),(129,3),(130,3),(137,3),(141,3),(148,3),(150,3);
 /*!40000 ALTER TABLE `usuario_has_rol` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -243,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-27 16:42:40
+-- Dump completed on 2021-03-06 18:00:14
