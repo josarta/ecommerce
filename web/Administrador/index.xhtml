@@ -74,6 +74,13 @@
 
             <div class="row">
                 <h:form>
+                    <h:commandLink  action="#{usuarioSesion.descargaListadoUsuario()}"  target="_blanck" style="margin-bottom: 10px;" class="btn btn-outline-success" value="Reporte"></h:commandLink>
+                </h:form>
+
+            </div>
+
+            <div class="row">
+                <h:form>
                     <table class="table" id="tablaUsuarios">
                         <thead class="thead-dark">
                             <tr>
@@ -108,6 +115,10 @@
                                             <f:ajax render="modalRoles"></f:ajax>
                                         </h:commandButton>
                                         <h:commandButton action="#{usuarioSesion.eliminarUsuario(usuario.idUsuario)}" class="btn btn-outline-danger" value="X"/>
+                                        <h:commandLink  action="#{usuarioSesion.descargaUsuario(usuario)}"  target="_blanck" style="margin-bottom: 10px;" class="btn btn-outline-success" value="Reporte">
+                                        
+                                        </h:commandLink>
+
                                     </td>
                                 </tr>
 
@@ -120,6 +131,8 @@
                     </table>
 
                 </h:form>
+
+
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document" style="max-width: 675px;">

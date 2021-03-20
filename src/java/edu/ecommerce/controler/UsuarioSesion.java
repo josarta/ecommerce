@@ -5,18 +5,31 @@
  */
 package edu.ecommerce.controler;
 
+import com.mysql.jdbc.Connection;
 import edu.ecommerce.entity.Rol;
 import edu.ecommerce.entity.Usuario;
 import edu.ecommerce.facade.RolFacadeLocal;
 import edu.ecommerce.facade.UsuarioFacadeLocal;
 import edu.ecommerce.utilidades.Email;
+import java.io.File;
+import java.io.OutputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  *
@@ -116,6 +129,60 @@ public class UsuarioSesion implements Serializable {
             regEx = "2";
         }
     }
+    
+    
+    
+    public void descargaListadoUsuario(){
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext context = facesContext.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) context.getRequest();
+        HttpServletResponse response = (HttpServletResponse) context.getResponse();
+        response.setContentType("application/pdf");
+        
+        try {            
+            Map parametro = new HashMap();
+            parametro.put("usuLog", usuLog.getNombre() + " " + usuLog.getApellido() );
+            Connection conec = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "root");
+            File jasper = new File(context.getRealPath("/Reportes/listausuarios.jasper"));
+            JasperPrint jp = JasperFillManager.fillReport(jasper.getPath(), parametro, conec);
+            HttpServletResponse hsr = (HttpServletResponse) context.getResponse();
+            hsr.addHeader("Content-disposition", "attachment; filename=ListadoUsuarios.pdf");
+            OutputStream os = hsr.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jp, os);
+            os.flush();
+            os.close();
+            facesContext.responseComplete();
+        } catch (Exception e) {
+            System.out.println("edu.ecommerce.controler.UsuarioSesion.descargaListadoUsuario() " + e.getMessage());
+        }
+    }
+    
+    
+     public void descargaUsuario(Usuario usuIn){
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext context = facesContext.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) context.getRequest();
+        HttpServletResponse response = (HttpServletResponse) context.getResponse();
+        response.setContentType("application/pdf");
+        
+        try {            
+            Map parametro = new HashMap();
+            parametro.put("docUsuario",  usuIn.getDocumento().toString());           
+            Connection conec = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommerce", "root", "root");
+            File jasper = new File(context.getRealPath("/Reportes/usuario.jasper"));
+            JasperPrint jp = JasperFillManager.fillReport(jasper.getPath(), parametro, conec);
+            HttpServletResponse hsr = (HttpServletResponse) context.getResponse();
+            hsr.addHeader("Content-disposition", "attachment; filename="+usuIn.getNombre()+" "+usuIn.getApellido()+".pdf");
+            OutputStream os = hsr.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jp, os);
+            os.flush();
+            os.close();
+            facesContext.responseComplete();
+        } catch (Exception e) {
+            System.out.println("edu.ecommerce.controler.UsuarioSesion.descargaListadoUsuario() " + e.getMessage());
+        }
+    }
+    
 
     public void activaUsuario(int id_usuario) {
         usuarioFacadeLocal.cambioEstado(id_usuario, 1);
