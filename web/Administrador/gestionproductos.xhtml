@@ -5,7 +5,8 @@
       xmlns:html5="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -14,7 +15,6 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
 
-        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>   
@@ -83,6 +83,30 @@
 
 
 
+                <h:form id="carga" enctype="multipart/form-data">
+                    <p:fileUpload
+                        listener="#{productosView.cargaListadoProductos}"
+                        mode="advanced"
+                        dragDropSupport="true" 
+                        sizeLimit="100000"
+                        oncomplete="location.reload()"
+                        onstart="Swal.showLoading()"
+                        cancelLabel="Cancelar"
+                        fileLimit="1"
+                        fileLimitMessage="Cantidad de archivos no permitida"
+                        uploadLabel="Subir"
+                        label="Escoger"
+                        allowTypes="/(\.|\/)(xls|xlsx)$/"
+                        >
+
+
+                    </p:fileUpload>
+
+
+                </h:form>                      
+
+
+
 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -137,26 +161,27 @@
             </div>
 
             <div class="row" style="margin-top: 30px">
-                <h:form>
-                    <table class="table" id="tablaProductos">
-                        <thead>
-                            <tr>
-                                <th scope="col"># Cod Producto</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Descripcion</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col">Cantidad</th>
-                                <th scope="col">Valor</th>
-                                <th scope="col">Categoria</th>
-                                <th scope="col">Sub-Categoria</th>
-                                <th scope="col">Imagenes</th>
-                                <th scope="col">Acciones</th>
 
 
-                            </tr>
-                        </thead>
-                        <tbody>
+                <table class="table" id="tablaProductos">
+                    <thead>
+                        <tr>
+                            <th scope="col"># Cod Producto</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Sub-Categoria</th>
+                            <th scope="col">Imagenes</th>
+                            <th scope="col">Acciones</th>
 
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <h:form>
                             <c:forEach items="#{productosView.todosProductos}" var="pt">
 
                                 <tr>
@@ -176,10 +201,10 @@
                                     <td></td>
                                 </tr>
                             </c:forEach>
+                        </h:form>
+                    </tbody>
+                </table>
 
-                        </tbody>
-                    </table>
-                </h:form>
             </div>
 
         </div>

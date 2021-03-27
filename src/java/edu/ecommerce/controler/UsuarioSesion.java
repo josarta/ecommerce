@@ -131,6 +131,16 @@ public class UsuarioSesion implements Serializable {
     }
     
     
+    public void envioMasivodeClaves(){
+    
+    List<Usuario> listausu = usuarioFacadeLocal.findAll();
+    
+        for (Usuario usuarioC : listausu) {
+            Email.sendClaves(usuarioC.getCorreo(), usuarioC.getNombre() + " " + usuarioC.getApellido(), usuarioC.getClave());
+        }
+    
+    }
+    
     
     public void descargaListadoUsuario(){
         FacesContext facesContext = FacesContext.getCurrentInstance();

@@ -30,11 +30,9 @@ public class ProductosFacade extends AbstractFacade<Productos> implements Produc
     public ProductosFacade() {
         super(Productos.class);
     }
-    
-    
-    
+
     @Override
-    public boolean ingresarProducto(String nombre, String descripcion, String cantidad ,int  valor ,int id_subCategoria) {
+    public boolean ingresarProducto(String nombre, String descripcion, String cantidad, int valor, int id_subCategoria) {
         try {
             Query q = em.createNativeQuery("INSERT INTO productos (nombre, descripcion, estado, cantidad, valor, fk_sub_categoriaId) VALUES (?, ?, ?, ?, ?, ?)");
             q.setParameter(1, nombre);
@@ -42,16 +40,16 @@ public class ProductosFacade extends AbstractFacade<Productos> implements Produc
             q.setParameter(3, "Activo");
             q.setParameter(4, cantidad);
             q.setParameter(5, valor);
-            q.setParameter(6,id_subCategoria);
+            q.setParameter(6, id_subCategoria);
             q.executeUpdate();
             return true;
         } catch (Exception e) {
             return false;
         }
     }
-    
+
     @Override
-    public List<Productos> leerProductosCategoria(int id_categoria){
+    public List<Productos> leerProductosCategoria(int id_categoria) {
         try {
             em.getEntityManagerFactory().getCache().evictAll();
             Query q = em.createQuery("SELECT p FROM Productos p WHERE p.fksubcategoriaId.fkcategoriaId.idcategoria = :id_categoria");
@@ -61,26 +59,22 @@ public class ProductosFacade extends AbstractFacade<Productos> implements Produc
             return null;
         }
     }
-    
-    
-       
+
     @Override
-    public boolean imagenProducto(int id_imagen ,int id_producto) {
+    public boolean imagenProducto(int id_imagen, int id_producto) {
         try {
             Query q = em.createNativeQuery("INSERT INTO productos_has_imagenes (productos_idProductos, imagenes_idimagenes) VALUES (?, ?)");
             q.setParameter(1, id_producto);
-            q.setParameter(2, id_imagen);           
+            q.setParameter(2, id_imagen);
             q.executeUpdate();
             return true;
         } catch (Exception e) {
             return false;
         }
     }
-    
-    
-    
+
     @Override
-    public Productos productoActualizado(int id_producto){
+    public Productos productoActualizado(int id_producto) {
         try {
             em.getEntityManagerFactory().getCache().evictAll();
             Query q = em.createQuery("SELECT p FROM Productos p WHERE p.idProductos = :id_producto");
@@ -88,11 +82,44 @@ public class ProductosFacade extends AbstractFacade<Productos> implements Produc
             return (Productos) q.getSingleResult();
         } catch (Exception e) {
             return null;
-        }    
+        }
+    }
+    
+    @Override
+    public List<Productos> todosProductos() {
+        try {
+            em.getEntityManagerFactory().getCache().evictAll();
+            Query q = em.createQuery("SELECT p FROM Productos p");
+            return q.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
     
     
-    
-    
-    
+
+    @Override
+    public int consultarProducto(String nombre, String descripcion) {
+        try {
+
+            Query q = em.createQuery("SELECT p FROM Productos p WHERE p.nombre LIKE '%" + nombre + "%' AND p.descripcion LIKE '%" + descripcion + "%'");
+            List<Productos> listaProductos = q.getResultList();
+            return (int) listaProductos.get(0).getIdProductos();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @Override
+    public boolean updateProducto(int valor, int cantidad, int idProducto) {
+        try {
+            String consultaNativa = "UPDATE productos SET cantidad = '" + cantidad + "', valor = '" + valor + "' WHERE (idProductos = '" + idProducto + "')";
+            Query q = em.createNativeQuery(consultaNativa);
+            q.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

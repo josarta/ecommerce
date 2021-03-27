@@ -37,5 +37,11 @@ public interface ProductosFacadeLocal {
     public boolean imagenProducto(int id_imagen, int id_producto);
 
     public Productos productoActualizado(int id_producto);
+
+    public int consultarProducto(String nombre, String descripcion);
+
+    public boolean updateProducto(int valor, int cantidad, int idProducto);
+
+    public List<Productos> todosProductos();
     
 }

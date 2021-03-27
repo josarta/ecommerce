@@ -14,6 +14,7 @@ import edu.ecommerce.facade.ImagenesFacadeLocal;
 import edu.ecommerce.facade.ProductosFacadeLocal;
 import edu.ecommerce.facade.SubCategoriaFacadeLocal;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
@@ -21,13 +22,19 @@ import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.servlet.http.Part;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.shaded.commons.io.FilenameUtils;
 
 /**
@@ -72,10 +79,10 @@ public class ProductosView implements Serializable {
     @PostConstruct
     public void cargaInicial() {
         todasCategorias.addAll(categoriaFacadeLocal.findAll());
-        if(todasCategorias.size() > 0){
-             todasSubCategorias.addAll(subCategoriaFacadeLocal.leerSubCategoria(todasCategorias.get(0).getIdcategoria()));
-        }   
-        todosProductos.addAll(productosFacadeLocal.findAll());
+        if (todasCategorias.size() > 0) {
+            todasSubCategorias.addAll(subCategoriaFacadeLocal.leerSubCategoria(todasCategorias.get(0).getIdcategoria()));
+        }
+        todosProductos.addAll(productosFacadeLocal.todosProductos());
     }
 
     public void leerSubCategorias() {
@@ -142,6 +149,70 @@ public class ProductosView implements Serializable {
         }
         PrimeFaces.current().executeScript(mensajes);
         PrimeFaces.current().executeScript("$('#reset').click()");
+    }
+
+    public void cargaListadoProductos(FileUploadEvent event) throws IOException {
+        InputStream input = event.getFile().getInputStream();
+        List cellData = new ArrayList();
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(input);
+            XSSFSheet hssfSheet = workbook.getSheetAt(0);
+            Iterator rowIterador = hssfSheet.rowIterator();
+            rowIterador.next();
+
+            while (rowIterador.hasNext()) {
+                XSSFRow hssfRow = (XSSFRow) rowIterador.next();
+                Iterator iterador = hssfRow.cellIterator();
+                List cellTemp = new ArrayList();
+                while (iterador.hasNext()) {
+                    XSSFCell hssfCell = (XSSFCell) iterador.next();
+                    cellTemp.add(hssfCell);
+                }
+                cellData.add(cellTemp);
+            }
+
+            for (int i = 0; i < cellData.size(); i++) {
+                List cellTemp = (List) cellData.get(i);
+                Productos ptNew = new Productos();
+                for (int j = 0; j < cellTemp.size(); j++) {
+                    XSSFCell celda = (XSSFCell) cellTemp.get(j);
+                    switch (j) {
+                        case 0:
+                            ptNew.setNombre(celda.toString());
+                            break;
+                        case 1:
+                            ptNew.setDescripcion(celda.toString());
+                            break;
+                        case 2:
+                            ptNew.setEstado(celda.toString());
+                            break;
+                        case 3:
+                            ptNew.setCantidad((int) celda.getNumericCellValue());
+                            break;
+                        case 4:
+                            ptNew.setValor((float) celda.getNumericCellValue());
+                            break;
+
+                        case 5:
+                            int idProducto = productosFacadeLocal.consultarProducto(ptNew.getNombre(), ptNew.getDescripcion());
+                            if (idProducto != 0) {
+                                productosFacadeLocal.updateProducto(ptNew.getValor().intValue(), ptNew.getCantidad(), idProducto);
+                            } else {
+                                productosFacadeLocal.ingresarProducto(
+                                        ptNew.getNombre(),
+                                        ptNew.getDescripcion(),
+                                        ptNew.getCantidad().toString(),
+                                        ptNew.getValor().intValue(),
+                                        (int) celda.getNumericCellValue());
+                            }
+                            break;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("edu.ecommerce.controler.ProductosView.cargaListadoProductos()" + e.getMessage());
+        }
     }
 
     public void guardadProductoGestion(Productos productoSelect) {
